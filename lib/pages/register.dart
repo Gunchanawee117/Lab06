@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lab06/pages/index.dart';
 import 'package:lab06/pages/login.dart';
+import 'package:lab06/pages/services/auth_service.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -34,14 +36,36 @@ class _RegisterpageState extends State<Registerpage> {
 
   ElevatedButton register() => ElevatedButton(
       onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Pagelogin()));
+        if (_formkey.currentState!.validate()) {
+          print("ok");
+          print(_emailcontroller.text);
+          AuthService.registerUser(
+                  _emailcontroller.text, _passwordcontroll.text)
+              .then((value) {
+            if (value == 1) {
+              Navigator.pop(context);
+            }
+          });
+
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => Pagelogin()));
+        } else {
+          print("try again");
+        }
       },
       child: const Text('confirm Register'));
 
   TextFormField password() {
     return TextFormField(
       controller: _passwordcontroll,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "กรุณากรอกรหัสผ่าน";
+        }
+        {
+          return null;
+        }
+      },
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.password),
         labelText: 'Input password',

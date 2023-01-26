@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lab06/pages/index.dart';
 import 'package:lab06/pages/register.dart';
+import 'package:lab06/pages/services/auth_service.dart';
 
 class Pagelogin extends StatefulWidget {
   const Pagelogin({super.key});
@@ -44,7 +46,15 @@ class _PageloginState extends State<Pagelogin> {
     return ElevatedButton(
       onPressed: () {
         if (_formkey.currentState!.validate()) {
-          print('ok');
+          print('✓ Login Successful');
+
+          AuthService.loginUser(_emailcontroller.text, _passwordcontroll.text)
+              .then((value) {
+            if (value == 1) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => Indexpage()));
+            }
+          });
         }
       },
       child: const Text('Login'),
@@ -54,6 +64,14 @@ class _PageloginState extends State<Pagelogin> {
   TextFormField password() {
     return TextFormField(
       controller: _passwordcontroll,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "กรุณากรอกรหัสผ่าน";
+        }
+        {
+          return null;
+        }
+      },
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.password),
         labelText: 'Input password',
